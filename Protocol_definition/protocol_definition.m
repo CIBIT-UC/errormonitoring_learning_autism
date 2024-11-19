@@ -4,10 +4,6 @@
 %%
 clear all; close all; clc;
 %% 
-errors_total=0;
-correct_total=0;
-err_nr = [];
-corr_nr = [];
 idx = 1;
 
 %% 
@@ -29,9 +25,6 @@ for g = 1:2
     mean_rt = mean_rt.mean_rt_table;
 
     for s = subs
-
-        err_part = 0;
-        corr_part = 0;
 
         if s < 10
             sub = strcat(group,'0',num2str(s));
@@ -102,8 +95,6 @@ for g = 1:2
                         protocol{ev,3} = responses.Reaction_time(i);
                         protocol{ev,4} = 0;
                         protocol{ev,5} = triggers(1,i);
-                        correct_total=correct_total+1;
-                        corr_part = corr_part +1;
                         ev = ev+1;
                         responses_description{idx,5} = "Correct";
                     elseif string(responses.Result(i)) == "Error" || ...
@@ -128,8 +119,6 @@ for g = 1:2
                             string(responses.Result(i)) == "Both actions (correct +ET)" || ...
                             string(responses.Result(i)) == "Both actions (correct +ET anticipated)" || ...
                             string(responses.Result(i)) == "Both actions (correct anticipated +ET)" 
-                        errors_total=errors_total+1;
-                        err_part = err_part +1;
                         protocol{ev,1} = "Error"; 
                         protocol{ev,2} = round(triggers(8,i));
                         protocol{ev,3} = responses.Reaction_time(i);
@@ -138,8 +127,6 @@ for g = 1:2
                         ev = ev+1;
                         responses_description{idx,5} = "Error";
                     elseif string(responses.Result(i)) == "Error (no-go)"
-                        errors_total=errors_total+1;
-                        err_part = err_part +1;
                         protocol{ev,1} = "Error"; 
                         protocol{ev,2} = round(triggers(8,i));
                         if string(responses.Saccade2make(i)) ~= "Fixation" 
@@ -193,9 +180,6 @@ for g = 1:2
             save(strcat(dir_files,'protocol/protocol_', nrun, '.mat'), 'protocol');
 
         end
-
-        err_nr = [err_nr err_part];
-        corr_nr = [corr_nr corr_part];
     end
 end
 %% Save responses description file
